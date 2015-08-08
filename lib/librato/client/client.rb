@@ -1,6 +1,7 @@
 class Librato::Client
   ENDPOINT = 'https://metrics-api.librato.com'
   API_VERSION = 'v1'
+  USER_AGENT = "Ruby Librato Client #{Librato::Client::VERSION}"
 
   DEFAULT_ADAPTERS = [
     Faraday::Adapter::NetHttp,
@@ -60,6 +61,8 @@ class Librato::Client
         faraday.adapter Faraday.default_adapter
       end
     end
+
+    @conn.headers[:user_agent] = USER_AGENT
   end
 
   def method_missing(name, *args)
