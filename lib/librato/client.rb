@@ -1,7 +1,7 @@
-require "librato/client/version"
+require 'faraday'
+require 'faraday_middleware'
 
-module Librato
-  module Client
-    # Your code goes here...
-  end
-end
+require 'librato/client/version'
+require 'librato/client/client'
+require 'librato/client/pageable_resources'
+require 'librato/client/resource'
