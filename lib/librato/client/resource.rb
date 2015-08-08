@@ -8,10 +8,10 @@ class Librato::Client::Resource
 
   def request(method_name, params = {})
     url = "/#{Librato::Client::API_VERSION}/#{@name}"
-    url << @resource_id if @resource_id
+    url << "/#{@resource_id}" if @resource_id
 
     res = @conn.send(method_name) do |req|
-      req.url "/#{Librato::Client::API_VERSION}/#{@name}"
+      req.url url
       req.params = params
     end
 
