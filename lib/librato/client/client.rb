@@ -18,8 +18,12 @@ class Librato::Client
     :jobs         => [:get, :post, :put, :delete],
     :services     => [:get, :post, :put, :delete],
     :sources      => [:get, :post, :put, :delete],
-    :spaces       => [:get, :post, :put, :delete],
+    :spaces       => [:get, :post, :put, :delete, :charts],
     :users        => [:get, :post, :put, :delete],
+  }
+
+  RESOURCE_OPTIONS = {
+    :expand_pageable_resources => true,
   }
 
   def initialize(options)
@@ -29,6 +33,16 @@ class Librato::Client
 
     unless token = options.delete(:token)
       raise ArgumentError, ':token is required'
+    end
+
+    @resource_options = {}
+
+    RESOURCE_OPTIONS.each do |key, default_value|
+      if options.has_key?(key)
+        @resource_options[key] = options.delete(key)
+      else
+        @resource_options[key] = default_value
+      end
     end
 
     options[:url] ||= ENDPOINT
@@ -57,6 +71,7 @@ class Librato::Client
       raise ArgumentError, "wrong number of arguments (#{args.length} for 0..1)"
     end
 
-    Librato::Client::Resource.new(name, args[0], RESOURCES[name], @conn)
+    Librato::Client::Resource.new(
+      @conn, nil, name, args[0], RESOURCES[name], @resource_options)
   end
 end
