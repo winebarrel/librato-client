@@ -1,8 +1,6 @@
 # Librato::Client
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/librato/client`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Librato API Client for for Ruby.
 
 ## Installation
 
@@ -22,20 +20,133 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+see [Librato API Documentation — Librato API Documentation](http://dev.librato.com/v1).
 
-## Development
+### Create client
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+client = Librato::Client.new(
+  user: '...',
+  token: '...'
+  # [, Other Options]
+)
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+* Other Options
+  * `:debug`
+  * `:expand_pageable_resources`
+  * `:raise_error_if_not_exist`
+  * `:wrap_faraday_client_error`
+  * `:default_alerts_version`
 
-## Contributing
+### List metrics
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/librato-client.
+```ruby
+client.metrics.get
+#=> [{"name"=>"login-delay",
+#     "display_name"=>nil,
+#     "type"=>"gauge",
+#     "attributes"=>{"created_by_ua"=>"Ruby Librato Client 0.1.0"},
+#     "description"=>nil,
+#     "period"=>nil,
+#     "source_lag"=>nil}]
+```
 
+### Show a metric
 
-## License
+```ruby
+client.metrics("login-delay").get
+#=> {"name"=>"login-delay",
+#    "display_name"=>nil,
+#    "type"=>"gauge",
+#    "attributes"=>{"created_by_ua"=>"Ruby Librato Client 0.1.0"},
+#    "description"=>nil,
+#    "period"=>nil,
+#    "source_lag"=>nil}
+```
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+```ruby
+client.metrics("login-delay").get(
+  compose: 'series("*")',
+  start_time: 1439108273,
+  resolution: 300
+)
 
+#=> {"measurements"=>
+#     {"foo.bar.com"=>
+#       [{"measure_time"=>1439108400,
+#         "value"=>3.5,
+#         "count"=>5,
+#         "min"=>3.5,
+#         "max"=>3.5,
+#         "sum"=>17.5,
+#         "sum_squares"=>61.25},
+#         ...
+```
+
+see [Composite Metrics Language Specification – Customer Feedback & Support for Librato](http://support.metrics.librato.com/knowledgebase/articles/337431-composite-metrics-language-specification)
+
+### Create a metric
+
+```ruby
+client.metrics.post({
+  gauges: {
+    "login-delay" => {
+      value: 3.5,
+      source: "foo.bar.com"
+    }
+  }
+}
+```
+
+### Update a metric
+
+```ruby
+client.metrics("login-delay").put(display_name: "Login delay")
+```
+
+### Delete a metrics
+
+```ruby
+client.metrics("login-delay").delete
+```
+
+### List spaces
+
+```ruby
+client.spaces.get
+```
+
+### Show a space
+
+```ruby
+client.spaces(12345).get
+```
+
+### Create a space
+
+```ruby
+client.spaces.post(name: "My Space")
+```
+
+### List charts
+
+```ruby
+client.spaces(12345).charts.get
+```
+
+### Show a chart
+
+```ruby
+client.spaces(12345).charts(6789).get
+```
+
+### Create a chart
+
+```ruby
+client.spaces(77109).charts.post(
+  name: "My Chart",
+  type: "line",
+  streams: [...]
+)
+```
