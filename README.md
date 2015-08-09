@@ -27,6 +27,8 @@ Or install it yourself as:
 ### Create client
 
 ```ruby
+require 'librato/client'
+
 client = Librato::Client.new(
   user: '...',
   token: '...'
