@@ -98,7 +98,7 @@ client.metrics.post({
       source: "foo.bar.com"
     }
   }
-}
+})
 ```
 
 ### Update a metric
