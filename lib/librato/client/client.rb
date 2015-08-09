@@ -13,18 +13,21 @@ class Librato::Client
     :annotations  => [:get, :post, :put, :delete],
     :alerts       => [:get, :post, :put, :delete],
     :api_tokens   => [:get, :post, :put, :delete],
-    :chart_tokens => [:get, :post, :put, :delete],
+    :charts       => [:get, :post,       :delete],
     :dashboards   => [:get, :post, :put, :delete],
     :instruments  => [:get, :post, :put, :delete],
-    :jobs         => [:get, :post, :put, :delete],
+    :jobs         => [:get                      ],
     :services     => [:get, :post, :put, :delete],
-    :sources      => [:get, :post, :put, :delete],
+    :sources      => [:get,        :put, :delete],
     :spaces       => [:get, :post, :put, :delete, :charts],
     :users        => [:get, :post, :put, :delete],
   }
 
   RESOURCE_OPTIONS = {
     :expand_pageable_resources => true,
+    :raise_error_if_not_exist  => false,
+    :wrap_faraday_client_error => true,
+    :default_alerts_version    => 2,
   }
 
   def initialize(options)
@@ -36,6 +39,7 @@ class Librato::Client
       raise ArgumentError, ':token is required'
     end
 
+    @debug = options.delete(:debug)
     @resource_options = {}
 
     RESOURCE_OPTIONS.each do |key, default_value|
@@ -52,6 +56,7 @@ class Librato::Client
       faraday.request  :url_encoded
       faraday.response :json, :content_type => /\bjson\b/
       faraday.response :raise_error
+      faraday.response :logger if @debug
 
       faraday.basic_auth user, token
 

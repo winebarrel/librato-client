@@ -35,7 +35,7 @@ class Librato::Client::PageableResources
 
   def next_page
     params = @params.merge(:offset => offset + length)
-    @resource.request(@method_name, params)
+    @resource.request(@method_name, params, :expand_pageable_resources => false)
   end
 
   def each
