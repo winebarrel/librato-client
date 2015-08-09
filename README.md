@@ -20,7 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-see [Librato API Documentation — Librato API Documentation](http://dev.librato.com/v1).
+* [Librato API Documentation — Librato API Documentation](http://dev.librato.com/v1),
+* [RESOURCES](https://github.com/winebarrel/librato-client/blob/master/lib/librato/client/client.rb#L11)
+* [SUB_RESOURCES](https://github.com/winebarrel/librato-client/blob/master/lib/librato/client/resource.rb#L2).
 
 ### Create client
 
