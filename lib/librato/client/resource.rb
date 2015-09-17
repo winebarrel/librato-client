@@ -1,6 +1,7 @@
 class Librato::Client::Resource
   SUB_RESOURCES = {
     :charts => [:get, :post, :put, :delete],
+    :status => [:get]
   }
 
   def initialize(conn, root, name, resource_id, methods, options = {})

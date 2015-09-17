@@ -11,7 +11,7 @@ class Librato::Client
   RESOURCES = {
     :metrics      => [:get, :post, :put, :delete],
     :annotations  => [:get, :post, :put, :delete],
-    :alerts       => [:get, :post, :put, :delete],
+    :alerts       => [:get, :post, :put, :delete, :status],
     :api_tokens   => [:get, :post, :put, :delete],
     :charts       => [:get, :post,       :delete],
     :dashboards   => [:get, :post, :put, :delete],
